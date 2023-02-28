@@ -12,21 +12,22 @@ namespace DbTask
         InternalDbContext internalDb = new InternalDbContext();
         ExternalDbContext externalDb = new ExternalDbContext();
 
-        public void AddCountry(ExCountry country)
+        public void AddCountry(InCountry country)
         {
-            externalDb.Countries.Add(country);
+            internalDb.Countries.Add(country);
             externalDb.SaveChanges();
-            SyncEntities(
-                externalDb.Countries,
-                internalDb.Countries,
-                externalCountry => new InCountry
-                {
-                    Name = externalCountry.Name
-                },
-                internalDb);
+            //externalDb.SaveChanges();
+            //SyncEntities(
+            //    externalDb.Countries,
+            //    internalDb.Countries,
+            //    externalCountry => new InCountry
+            //    {
+            //        Name = externalCountry.Name
+            //    },
+            //    internalDb);
         }
 
-        public void AddCity(InCity city)
+        public void AddCity(InternalDb.Models.InCity city)
         {
             internalDb.Cities.Add(city);
             internalDb.SaveChanges();
@@ -34,7 +35,7 @@ namespace DbTask
             SyncEntities(
                 externalDb.Cities,
                 internalDb.Cities,
-                externalCountry => new ExCity
+                externalCountry => new ExternalDb.Models.ExCity
                 {
                     Name = externalCountry.Name,
                     CountryId = externalCountry.CountryId

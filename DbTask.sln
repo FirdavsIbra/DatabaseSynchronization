@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTask", "DbTask\DbTask.csproj", "{14C2B7DA-FF43-4206-AD9D-5F36D88A6628}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTask", "DbTask\DbTask.csproj", "{14C2B7DA-FF43-4206-AD9D-5F36D88A6628}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTask.ExternalDb", "DbTask.ExternalDb\DbTask.ExternalDb.csproj", "{97BBF2AB-CED3-4087-9709-1E08D0EEFF83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTask.ExternalDb", "DbTask.ExternalDb\DbTask.ExternalDb.csproj", "{97BBF2AB-CED3-4087-9709-1E08D0EEFF83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTask.InternalDb", "DbTask.InternalDb\DbTask.InternalDb.csproj", "{19D410E1-4805-43E6-9B73-9277FC449DF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTask.InternalDb", "DbTask.InternalDb\DbTask.InternalDb.csproj", "{19D410E1-4805-43E6-9B73-9277FC449DF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTask.Api", "DbTask.Api\DbTask.Api.csproj", "{DC8D7DEC-D6EE-428B-B039-D509FC07CFC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{19D410E1-4805-43E6-9B73-9277FC449DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19D410E1-4805-43E6-9B73-9277FC449DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19D410E1-4805-43E6-9B73-9277FC449DF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC8D7DEC-D6EE-428B-B039-D509FC07CFC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC8D7DEC-D6EE-428B-B039-D509FC07CFC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC8D7DEC-D6EE-428B-B039-D509FC07CFC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC8D7DEC-D6EE-428B-B039-D509FC07CFC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

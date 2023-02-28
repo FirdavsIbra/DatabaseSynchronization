@@ -1,10 +1,13 @@
-﻿namespace DbTask.InternalDb.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DbTask.InternalDb.Models
 {
     public sealed class InOffice
     {
         /// <summary>
         /// Gets or sets id of office.
         /// </summary>
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Id { get; set; }
 
         /// <summary>

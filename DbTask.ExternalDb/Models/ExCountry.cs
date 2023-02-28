@@ -1,10 +1,13 @@
-﻿namespace DbTask.ExternalDb.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DbTask.ExternalDb.Models
 {
     public sealed class ExCountry
     {
         /// <summary>
         /// Gets or sets id of country.
         /// </summary>
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Id { get; set; }
 
         /// <summary>
