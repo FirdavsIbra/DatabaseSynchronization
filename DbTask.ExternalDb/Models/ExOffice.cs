@@ -16,6 +16,6 @@
         /// Gets or sets city id of office.
         /// </summary>
         public long CityId { get; set; }
-        public ExOffice City { get; set; }
+        public ExCity City { get; set; }
     }
 }

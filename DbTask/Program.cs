@@ -1,5 +1,4 @@
 ﻿using DbTask;
-using DbTask.ExternalDb.Models;
 using DbTask.InternalDb.Models;
 
 internal class Program

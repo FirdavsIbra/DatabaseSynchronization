@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DbTask.Api.Services
 {
-    public class Synchronize : BackgroundService, ISynchronize
+    public class Synchronize : ISynchronize
     {
         /// <summary>
         /// Synchronize countries from internal database to external database.
@@ -25,7 +25,7 @@ namespace DbTask.Api.Services
 
                 if (externalCountry == null)
                 {
-                    externalCountry = new ExCountry { Name = internalCountry.Name };
+                    externalCountry = new ExCountry { Id = internalCountry.Id ,Name = internalCountry.Name };
                     await externalDbContext.Countries.AddAsync(externalCountry);
                 }
                 else
@@ -62,7 +62,7 @@ namespace DbTask.Api.Services
 
                 if (internalCity == null)
                 {
-                    internalCity = new InCity { Name = externalCity.Name };
+                    internalCity = new InCity { Id = externalCity.Id, Name = externalCity.Name, CountryId = externalCity.CountryId };
                     await internalDbContext.Cities.AddAsync(internalCity);
                 }
                 else
@@ -100,7 +100,7 @@ namespace DbTask.Api.Services
 
                 if (internalOffice == null)
                 {
-                    internalOffice = new InOffice { Name = externalOffice.Name };
+                    internalOffice = new InOffice { Id = externalOffice.Id, Name = externalOffice.Name };
                     await internalDbContext.Offices.AddAsync(internalOffice);
                 }
                 else
@@ -121,30 +121,5 @@ namespace DbTask.Api.Services
             await internalDbContext.SaveChangesAsync();
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                try
-                {
-                    Console.WriteLine("Synchronization started");
-                    await SyncCitiesAsync();
-                    //await SyncCountriesAsync();
-                    await SyncOfficesAsync();
-                    Console.WriteLine("Synchronization completed");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    Console.WriteLine("Syncronization failed");
-                }
-                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
-            }
-        }
-
-        public async Task StartSyncAsync(CancellationToken cancellationToken)
-        {
-            await StartAsync(cancellationToken);
-        }
     }
 }

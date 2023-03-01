@@ -6,16 +6,19 @@ namespace DbTask.Api.Controllers
     [Route("api/synchronizer")]
     public class SynchronizerController : ControllerBase
     {
-        private readonly ISynchronize _synchronize;
-        public SynchronizerController(ISynchronize synchronize)
-        {   
-            _synchronize = synchronize;
+        private readonly IStartSync _startSync;
+        public SynchronizerController(IStartSync startSync)
+        {
+            _startSync = startSync;
         }
 
+        /// <summary>
+        /// Synchronize databases.
+        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> SynchronizeAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> SynchronizeAsync()
         {
-            await _synchronize.StartSyncAsync(cancellationToken);
+            await _startSync.StartSyncAsync();
             return Ok();
         }
     }

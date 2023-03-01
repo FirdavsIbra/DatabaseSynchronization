@@ -16,7 +16,7 @@ namespace DbTask
 
             externalDb.Countries.Add(new ExCountry
             {
-                Name ="fsd"
+                Name = "fsd"
             });
             externalDb.SaveChanges();
             // Synchronize Country table from internal to external
@@ -31,7 +31,7 @@ namespace DbTask
 
             foreach (var country in countryChanges)
             {
-                if(country.State == EntityState.Added)
+                if (country.State == EntityState.Added)
                 {
                     foreach (var exCountry in externalCountries)
                     {
@@ -46,17 +46,17 @@ namespace DbTask
                 }
                 else if (country.State == EntityState.Deleted)
                 {
-                    foreach(var exCountry in externalCountries)
+                    foreach (var exCountry in externalCountries)
                     {
                         var internalCountry = internalCountries.FirstOrDefault(c => c.Id == exCountry.Id);
-                        
-                        if(internalCountry == null)
+
+                        if (internalCountry == null)
                         {
                             internalDb.Remove(internalCountry);
                         }
                     }
                 }
-                else if(country.State == EntityState.Modified)
+                else if (country.State == EntityState.Modified)
                 {
                     foreach (var exCountry in externalCountries)
                     {
@@ -70,7 +70,7 @@ namespace DbTask
                 }
             }
 
-            
+
 
             // Synchronize City and Offices tables from external to internal
             var externalCities = externalDb.Cities.ToList();
@@ -100,7 +100,7 @@ namespace DbTask
                     foreach (var inCity in internalCities)
                     {
                         var externalCity = externalCities.FirstOrDefault(c => c.Id == inCity.Id);
-                        if(externalCity == null)
+                        if (externalCity == null)
                         {
                             externalDb.Update(externalCity);
                         }
@@ -129,7 +129,7 @@ namespace DbTask
             var officeChanges = externalChanges.Where(c => c.Entity.GetType() == typeof(ExOffice)).ToList();
 
 
-            
+
             foreach (var office in officeChanges)
             {
                 if (office.State == EntityState.Deleted)
@@ -150,7 +150,7 @@ namespace DbTask
                     foreach (var inOffice in internalCities)
                     {
                         var externalOffice = externalOffices.FirstOrDefault(c => c.Id == inOffice.Id);
-                        if(externalOffice == null)
+                        if (externalOffice == null)
                         {
                             externalDb.Update(externalOffice);
                         }

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DbTask.ExternalDb.Migrations
 {
     [DbContext(typeof(ExternalDbContext))]
-    [Migration("20230227183405_first")]
-    partial class first
+    [Migration("20230301072431_ExMigration1")]
+    partial class ExMigration1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace DbTask.ExternalDb.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DbTask.ExternalDb.Models.City", b =>
+            modelBuilder.Entity("DbTask.ExternalDb.Models.ExCity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,13 +46,10 @@ namespace DbTask.ExternalDb.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("DbTask.ExternalDb.Models.Country", b =>
+            modelBuilder.Entity("DbTask.ExternalDb.Models.ExCountry", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -63,7 +60,7 @@ namespace DbTask.ExternalDb.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("DbTask.ExternalDb.Models.Office", b =>
+            modelBuilder.Entity("DbTask.ExternalDb.Models.ExOffice", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -85,9 +82,9 @@ namespace DbTask.ExternalDb.Migrations
                     b.ToTable("Offices");
                 });
 
-            modelBuilder.Entity("DbTask.ExternalDb.Models.City", b =>
+            modelBuilder.Entity("DbTask.ExternalDb.Models.ExCity", b =>
                 {
-                    b.HasOne("DbTask.ExternalDb.Models.Country", "Country")
+                    b.HasOne("DbTask.ExternalDb.Models.ExCountry", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -96,9 +93,9 @@ namespace DbTask.ExternalDb.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("DbTask.ExternalDb.Models.Office", b =>
+            modelBuilder.Entity("DbTask.ExternalDb.Models.ExOffice", b =>
                 {
-                    b.HasOne("DbTask.ExternalDb.Models.City", "City")
+                    b.HasOne("DbTask.ExternalDb.Models.ExCity", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)

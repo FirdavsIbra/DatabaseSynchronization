@@ -21,13 +21,10 @@ namespace DbTask.InternalDb.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DbTask.InternalDb.Models.City", b =>
+            modelBuilder.Entity("DbTask.InternalDb.Models.InCity", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("CountryId")
                         .HasColumnType("bigint");
@@ -43,7 +40,7 @@ namespace DbTask.InternalDb.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("DbTask.InternalDb.Models.Country", b =>
+            modelBuilder.Entity("DbTask.InternalDb.Models.InCountry", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,13 +57,10 @@ namespace DbTask.InternalDb.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("DbTask.InternalDb.Models.Office", b =>
+            modelBuilder.Entity("DbTask.InternalDb.Models.InOffice", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("CityId")
                         .HasColumnType("bigint");
@@ -82,9 +76,9 @@ namespace DbTask.InternalDb.Migrations
                     b.ToTable("Offices");
                 });
 
-            modelBuilder.Entity("DbTask.InternalDb.Models.City", b =>
+            modelBuilder.Entity("DbTask.InternalDb.Models.InCity", b =>
                 {
-                    b.HasOne("DbTask.InternalDb.Models.Country", "Country")
+                    b.HasOne("DbTask.InternalDb.Models.InCountry", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -93,9 +87,9 @@ namespace DbTask.InternalDb.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("DbTask.InternalDb.Models.Office", b =>
+            modelBuilder.Entity("DbTask.InternalDb.Models.InOffice", b =>
                 {
-                    b.HasOne("DbTask.InternalDb.Models.City", "City")
+                    b.HasOne("DbTask.InternalDb.Models.InCity", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)

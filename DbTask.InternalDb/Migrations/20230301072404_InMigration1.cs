@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace DbTask.ExternalDb.Migrations
+namespace DbTask.InternalDb.Migrations
 {
     /// <inheritdoc />
-    public partial class first : Migration
+    public partial class InMigration1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,8 +27,7 @@ namespace DbTask.ExternalDb.Migrations
                 name: "Cities",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CountryId = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -47,8 +46,7 @@ namespace DbTask.ExternalDb.Migrations
                 name: "Offices",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CityId = table.Column<long>(type: "bigint", nullable: false)
                 },
