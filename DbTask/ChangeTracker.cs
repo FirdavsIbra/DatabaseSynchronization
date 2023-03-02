@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DbTask
 {
+    /// <summary>
+    /// This project do not do any changes to build and will be deleted!
+    /// </summary>
     internal class ChangeTracker
     {
         public void Synch()

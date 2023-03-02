@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DbTask
 {
+    /// <summary>
+    /// This project do not do any changes to build and will be deleted!
+    /// </summary>
     public class DbServices
     {
         InternalDbContext internalDb = new InternalDbContext();
