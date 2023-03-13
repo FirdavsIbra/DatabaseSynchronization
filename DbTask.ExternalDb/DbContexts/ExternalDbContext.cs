@@ -20,9 +20,19 @@ namespace DbTask.ExternalDb.DbContexts
         /// </summary>
         public virtual DbSet<ExOffice> Offices { get; set; }
 
+        public virtual DbSet<ExDeletedCountry> DeletedCountries { get; set; }
+        public virtual DbSet<ExDeletedCity> DeletedCities { get; set; }
+        public virtual DbSet<ExDeletedOffice> DeletedOffices { get; set; }
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=NBA-088-01-UZ\\SQLEXPRESS;Database=ExternalDb;Trusted_Connection=True; TrustServerCertificate=True;");
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ExCity>().HasOne(c => c.Country).WithMany().OnDelete(DeleteBehavior.ClientNoAction);
+            modelBuilder.Entity<ExOffice>().HasOne(c => c.City).WithMany().OnDelete(DeleteBehavior.ClientNoAction);
         }
     }
 }

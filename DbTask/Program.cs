@@ -4,7 +4,7 @@ using DbTask.InternalDb.Models;
 internal class Program
 {
     /// <summary>
-    /// This project do not do any changes to build and will be deleted!.
+    /// This project do not do any changes to build and will be deleted!
     /// </summary>
     private static void Main(string[] args)
     {

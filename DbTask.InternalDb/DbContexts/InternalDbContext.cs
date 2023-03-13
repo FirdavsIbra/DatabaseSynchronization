@@ -20,9 +20,20 @@ namespace DbTask.InternalDb.DbContexts
         /// </summary>
         public virtual DbSet<InOffice> Offices { get; set; }
 
+        public virtual DbSet<InDeletedCountry> DeletedCountries { get; set; }
+        public virtual DbSet<InDeletedCity> DeletedCities { get; set; }
+        public virtual DbSet<InDeletedOffice> DeletedOffices { get; set; }
+       
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=NBA-088-01-UZ\\SQLEXPRESS;Database=InternalDb;Trusted_Connection=True; TrustServerCertificate=True;");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<InCity>().HasOne(c => c.Country).WithMany().OnDelete(DeleteBehavior.ClientNoAction);
+            modelBuilder.Entity<InOffice>().HasOne(c => c.City).WithMany().OnDelete(DeleteBehavior.ClientNoAction);
         }
     }
 }

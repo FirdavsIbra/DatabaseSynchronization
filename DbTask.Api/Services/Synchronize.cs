@@ -25,7 +25,11 @@ namespace DbTask.Api.Services
 
                 if (externalCountry == null)
                 {
-                    externalCountry = new ExCountry { Id = internalCountry.Id ,Name = internalCountry.Name };
+                    externalCountry = new ExCountry 
+                    { 
+                        Id = internalCountry.Id, 
+                        Name = internalCountry.Name 
+                    };
                     await externalDbContext.Countries.AddAsync(externalCountry);
                 }
                 else
@@ -33,17 +37,71 @@ namespace DbTask.Api.Services
                     externalDbContext.Countries.Update(externalCountry);
                 }
             }
+
             foreach (var externalCountry in externalCountries)
             {
-                var internalCity = internalCountries.FirstOrDefault(c => c.Id == externalCountry.Id);
+                var internalCountry = internalCountries.FirstOrDefault(c => c.Id == externalCountry.Id);
 
-                if (internalCity == null)
+                if (internalCountry == null)
                 {
+                    var deletedCountry = new ExDeletedCountry
+                    {
+                        Name = externalCountry.Name,
+                        DeletedAt = DateTime.Now
+                    };  
+                    externalDbContext.DeletedCountries.Add(deletedCountry);
+
+                    var citiesToDelete = await internalDbContext.Cities
+                                            .Where(c => c.CountryId == externalCountry.Id)
+                                            .ToListAsync();
+
+                    foreach (var city in citiesToDelete)
+                    {
+                        var deletedCity = new InDeletedCity
+                        {
+                            Name = city.Name,
+                            CountryId = city.CountryId,
+                            DeletedAt = DateTime.Now
+                        };
+                        internalDbContext.DeletedCities.Add(deletedCity);
+
+                        var officesToDelete = await internalDbContext.Offices
+                                                                .Where(o => o.CityId == city.Id)
+                                                                .ToListAsync();
+                        foreach (var office in officesToDelete)
+                        {
+                            var deletedOffice = new InDeletedOffice
+                            {
+                                Name = office.Name,
+                                CityId = office.CityId,
+                                DeletedAt = DateTime.Now
+                            };
+                            internalDbContext.DeletedOffices.Add(deletedOffice);
+                            internalDbContext.Offices.Remove(office);
+                        }
+
+                        internalDbContext.Cities.Remove(city);
+                    }
                     externalDbContext.Countries.Remove(externalCountry);
                 }
             }
             await externalDbContext.SaveChangesAsync();
+            await internalDbContext.SaveChangesAsync();
         }
+
+
+        public async Task SyncDeletedCountriesAsync()
+        {
+            await using var externalDbContext = new ExternalDbContext();
+            await using var internalDbContext = new InternalDbContext();
+
+            var internalDeletedCountries = await internalDbContext.DeletedCountries.ToListAsync();
+            var externalDeletedCountries =  externalDbContext.DeletedCountries;
+
+            
+        }
+
+
 
         /// <summary>
         /// Synchronize cities from external database to internal database.
@@ -52,7 +110,7 @@ namespace DbTask.Api.Services
         {
             await using var externalDbContext = new ExternalDbContext();
             await using var internalDbContext = new InternalDbContext();
-
+    
             var internalCities = await internalDbContext.Cities.ToListAsync();
             var externalCities = await externalDbContext.Cities.ToListAsync();
 
@@ -100,7 +158,7 @@ namespace DbTask.Api.Services
 
                 if (internalOffice == null)
                 {
-                    internalOffice = new InOffice { Id = externalOffice.Id, Name = externalOffice.Name };
+                    internalOffice = new InOffice { Id = externalOffice.Id, Name = externalOffice.Name, CityId = externalOffice.CityId };
                     await internalDbContext.Offices.AddAsync(internalOffice);
                 }
                 else
