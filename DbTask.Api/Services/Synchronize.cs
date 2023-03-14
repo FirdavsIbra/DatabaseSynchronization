@@ -48,16 +48,16 @@ namespace DbTask.Api.Services
                     {
                         Id = externalCountry.Id,
                         Name = externalCountry.Name,
-                        DeletedAt = DateTime.Now
+                        DeletedAt = DateTime.UtcNow
                     };
                     var inDeletedCountry = new InDeletedCountry
                     {
                         Id = externalCountry.Id,
                         Name = externalCountry.Name,
-                        DeletedAt = DateTime.Now
+                        DeletedAt = DateTime.UtcNow
                     };
-                    internalDbContext.DeletedCountries.Add(inDeletedCountry);
-                    externalDbContext.DeletedCountries.Add(exDeletedCountry);
+                    await internalDbContext.DeletedCountries.AddAsync(inDeletedCountry);
+                    await externalDbContext.DeletedCountries.AddAsync(exDeletedCountry);
 
                     var citiesToDelete = await externalDbContext.Cities
                                             .Where(c => c.CountryId == externalCountry.Id)
@@ -70,17 +70,17 @@ namespace DbTask.Api.Services
                             Id = city.Id,
                             Name = city.Name,
                             CountryId = city.CountryId,
-                            DeletedAt = DateTime.Now
+                            DeletedAt = DateTime.UtcNow
                         };
                         var exDeletedCity = new ExDeletedCity()
                         {
                             Id = city.Id,
                             Name = city.Name,
                             CountryId = city.CountryId,
-                            DeletedAt = DateTime.Now
+                            DeletedAt = DateTime.UtcNow
                         };
-                        externalDbContext.DeletedCities.Add(exDeletedCity);
-                        internalDbContext.DeletedCities.Add(inDeletedCity);
+                        await externalDbContext.DeletedCities.AddAsync(exDeletedCity);
+                        await internalDbContext.DeletedCities.AddAsync(inDeletedCity);
 
                         var officesToDelete = await externalDbContext.Offices
                                                                 .Where(o => o.CityId == city.Id)
@@ -92,17 +92,17 @@ namespace DbTask.Api.Services
                                 Id = office.Id,
                                 Name = office.Name,
                                 CityId = office.CityId,
-                                DeletedAt = DateTime.Now
+                                DeletedAt = DateTime.UtcNow
                             };
                             var exDeletedOffice = new ExDeletedOffice
                             {
                                 Id = office.Id,
                                 Name = office.Name,
                                 CityId = office.CityId,
-                                DeletedAt = DateTime.Now
+                                DeletedAt = DateTime.UtcNow
                             };
-                            externalDbContext.DeletedOffices.Add(exDeletedOffice);
-                            internalDbContext.DeletedOffices.Add(inDeletedOffice);
+                            await externalDbContext.DeletedOffices.AddAsync(exDeletedOffice);
+                            await internalDbContext.DeletedOffices.AddAsync(inDeletedOffice);
                             externalDbContext.Offices.Remove(office);
                         }
 
@@ -152,17 +152,17 @@ namespace DbTask.Api.Services
                         Id = internalCity.Id,
                         Name = internalCity.Name,
                         CountryId = internalCity.CountryId,
-                        DeletedAt = DateTime.Now
+                        DeletedAt = DateTime.UtcNow
                     };
                     var inDeletedCity = new InDeletedCity
                     {
                         Id = internalCity.Id,
                         Name = internalCity.Name,
                         CountryId = internalCity.CountryId,
-                        DeletedAt = DateTime.Now
+                        DeletedAt = DateTime.UtcNow
                     };
-                    internalDbContext.DeletedCities.Add(inDeletedCity);
-                    externalDbContext.DeletedCities.Add(exDeletedCity);
+                    await internalDbContext.DeletedCities.AddAsync(inDeletedCity);
+                    await externalDbContext.DeletedCities.AddAsync(exDeletedCity);
 
                     var officesToDelete = await internalDbContext.Offices.Where(o => o.CityId == internalCity.Id).ToListAsync();
 
@@ -173,7 +173,7 @@ namespace DbTask.Api.Services
                             Id = office.Id,
                             Name = office.Name,
                             CityId = office.CityId,
-                            DeletedAt = DateTime.Now
+                            DeletedAt = DateTime.UtcNow
                         };
 
                         var exDeletedOffice = new ExDeletedOffice
@@ -181,11 +181,11 @@ namespace DbTask.Api.Services
                             Id = office.Id,
                             Name = office.Name,
                             CityId = office.CityId,
-                            DeletedAt = DateTime.Now
+                            DeletedAt = DateTime.UtcNow
                         };
 
-                        externalDbContext.DeletedOffices.Add(exDeletedOffice);
-                        internalDbContext.DeletedOffices.Add(inDeleteOffice);
+                        await externalDbContext.DeletedOffices.AddAsync(exDeletedOffice);
+                        await internalDbContext.DeletedOffices.AddAsync(inDeleteOffice);
                         internalDbContext.Offices.Remove(office);
                     }
 
@@ -193,6 +193,7 @@ namespace DbTask.Api.Services
                 }
             }
             await internalDbContext.SaveChangesAsync();
+            await externalDbContext.SaveChangesAsync();
         }
 
         /// <summary>
@@ -227,10 +228,29 @@ namespace DbTask.Api.Services
 
                 if (externalOffice == null)
                 {
+                    var exDeletedOffice = new ExDeletedOffice
+                    {
+                        Id = internalOffice.Id,
+                        Name = internalOffice.Name,
+                        CityId = internalOffice.CityId,
+                        DeletedAt = DateTime.UtcNow
+                    };
+                    var inDeletedOffice = new InDeletedOffice
+                    {
+                        Id = internalOffice.Id,
+                        Name = internalOffice.Name,
+                        CityId = internalOffice.CityId,
+                        DeletedAt = DateTime.UtcNow
+                    };
+
+                    await internalDbContext.DeletedOffices.AddAsync(inDeletedOffice);
+                    await externalDbContext.DeletedOffices.AddAsync(exDeletedOffice);
+
                     internalDbContext.Offices.Remove(internalOffice);
                 }
             }
             await internalDbContext.SaveChangesAsync();
+            await externalDbContext.SaveChangesAsync();
         }
 
     }
