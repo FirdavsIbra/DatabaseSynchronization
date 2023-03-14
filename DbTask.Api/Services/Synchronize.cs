@@ -44,43 +44,69 @@ namespace DbTask.Api.Services
 
                 if (internalCountry == null)
                 {
-                    var deletedCountry = new ExDeletedCountry
+                    var exDeletedCountry = new ExDeletedCountry
                     {
+                        Id = externalCountry.Id,
                         Name = externalCountry.Name,
                         DeletedAt = DateTime.Now
-                    };  
-                    externalDbContext.DeletedCountries.Add(deletedCountry);
+                    };
+                    var inDeletedCountry = new InDeletedCountry
+                    {
+                        Id = externalCountry.Id,
+                        Name = externalCountry.Name,
+                        DeletedAt = DateTime.Now
+                    };
+                    internalDbContext.DeletedCountries.Add(inDeletedCountry);
+                    externalDbContext.DeletedCountries.Add(exDeletedCountry);
 
-                    var citiesToDelete = await internalDbContext.Cities
+                    var citiesToDelete = await externalDbContext.Cities
                                             .Where(c => c.CountryId == externalCountry.Id)
                                             .ToListAsync();
 
                     foreach (var city in citiesToDelete)
                     {
-                        var deletedCity = new InDeletedCity
+                        var inDeletedCity = new InDeletedCity
                         {
+                            Id = city.Id,
                             Name = city.Name,
                             CountryId = city.CountryId,
                             DeletedAt = DateTime.Now
                         };
-                        internalDbContext.DeletedCities.Add(deletedCity);
+                        var exDeletedCity = new ExDeletedCity()
+                        {
+                            Id = city.Id,
+                            Name = city.Name,
+                            CountryId = city.CountryId,
+                            DeletedAt = DateTime.Now
+                        };
+                        externalDbContext.DeletedCities.Add(exDeletedCity);
+                        internalDbContext.DeletedCities.Add(inDeletedCity);
 
-                        var officesToDelete = await internalDbContext.Offices
+                        var officesToDelete = await externalDbContext.Offices
                                                                 .Where(o => o.CityId == city.Id)
                                                                 .ToListAsync();
                         foreach (var office in officesToDelete)
                         {
-                            var deletedOffice = new InDeletedOffice
+                            var inDeletedOffice = new InDeletedOffice
                             {
+                                Id = office.Id,
                                 Name = office.Name,
                                 CityId = office.CityId,
                                 DeletedAt = DateTime.Now
                             };
-                            internalDbContext.DeletedOffices.Add(deletedOffice);
-                            internalDbContext.Offices.Remove(office);
+                            var exDeletedOffice = new ExDeletedOffice
+                            {
+                                Id = office.Id,
+                                Name = office.Name,
+                                CityId = office.CityId,
+                                DeletedAt = DateTime.Now
+                            };
+                            externalDbContext.DeletedOffices.Add(exDeletedOffice);
+                            internalDbContext.DeletedOffices.Add(inDeletedOffice);
+                            externalDbContext.Offices.Remove(office);
                         }
 
-                        internalDbContext.Cities.Remove(city);
+                        externalDbContext.Cities.Remove(city);
                     }
                     externalDbContext.Countries.Remove(externalCountry);
                 }
@@ -88,20 +114,6 @@ namespace DbTask.Api.Services
             await externalDbContext.SaveChangesAsync();
             await internalDbContext.SaveChangesAsync();
         }
-
-
-        public async Task SyncDeletedCountriesAsync()
-        {
-            await using var externalDbContext = new ExternalDbContext();
-            await using var internalDbContext = new InternalDbContext();
-
-            var internalDeletedCountries = await internalDbContext.DeletedCountries.ToListAsync();
-            var externalDeletedCountries =  externalDbContext.DeletedCountries;
-
-            
-        }
-
-
 
         /// <summary>
         /// Synchronize cities from external database to internal database.

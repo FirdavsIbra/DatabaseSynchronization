@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DbTask.InternalDb.Migrations
 {
     [DbContext(typeof(InternalDbContext))]
-    [Migration("20230313194252_firstmigration")]
+    [Migration("20230314062136_firstmigration")]
     partial class firstmigration
     {
         /// <inheritdoc />
@@ -64,10 +64,7 @@ namespace DbTask.InternalDb.Migrations
             modelBuilder.Entity("DbTask.InternalDb.Models.InDeletedCity", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("CountryId")
                         .HasColumnType("bigint");
@@ -87,10 +84,7 @@ namespace DbTask.InternalDb.Migrations
             modelBuilder.Entity("DbTask.InternalDb.Models.InDeletedCountry", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -107,10 +101,7 @@ namespace DbTask.InternalDb.Migrations
             modelBuilder.Entity("DbTask.InternalDb.Models.InDeletedOffice", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("CityId")
                         .HasColumnType("bigint");
@@ -151,7 +142,7 @@ namespace DbTask.InternalDb.Migrations
                     b.HasOne("DbTask.InternalDb.Models.InCountry", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Country");
@@ -162,7 +153,7 @@ namespace DbTask.InternalDb.Migrations
                     b.HasOne("DbTask.InternalDb.Models.InCity", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("City");

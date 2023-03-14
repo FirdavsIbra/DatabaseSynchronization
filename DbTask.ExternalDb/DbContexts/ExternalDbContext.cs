@@ -28,11 +28,6 @@ namespace DbTask.ExternalDb.DbContexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=NBA-088-01-UZ\\SQLEXPRESS;Database=ExternalDb;Trusted_Connection=True; TrustServerCertificate=True;");
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ExCity>().HasOne(c => c.Country).WithMany().OnDelete(DeleteBehavior.ClientNoAction);
-            modelBuilder.Entity<ExOffice>().HasOne(c => c.City).WithMany().OnDelete(DeleteBehavior.ClientNoAction);
-        }
+        }   
     }
 }

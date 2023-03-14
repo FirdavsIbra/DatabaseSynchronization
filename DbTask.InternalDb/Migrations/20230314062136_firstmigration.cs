@@ -28,8 +28,7 @@ namespace DbTask.InternalDb.Migrations
                 name: "DeletedCities",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CountryId = table.Column<long>(type: "bigint", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -43,8 +42,7 @@ namespace DbTask.InternalDb.Migrations
                 name: "DeletedCountries",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -57,8 +55,7 @@ namespace DbTask.InternalDb.Migrations
                 name: "DeletedOffices",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CityId = table.Column<long>(type: "bigint", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -83,7 +80,8 @@ namespace DbTask.InternalDb.Migrations
                         name: "FK_Cities_Countries_CountryId",
                         column: x => x.CountryId,
                         principalTable: "Countries",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -101,7 +99,8 @@ namespace DbTask.InternalDb.Migrations
                         name: "FK_Offices_Cities_CityId",
                         column: x => x.CityId,
                         principalTable: "Cities",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

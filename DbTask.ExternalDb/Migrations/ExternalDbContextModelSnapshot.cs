@@ -61,10 +61,7 @@ namespace DbTask.ExternalDb.Migrations
             modelBuilder.Entity("DbTask.ExternalDb.Models.ExDeletedCity", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("CountryId")
                         .HasColumnType("bigint");
@@ -84,10 +81,7 @@ namespace DbTask.ExternalDb.Migrations
             modelBuilder.Entity("DbTask.ExternalDb.Models.ExDeletedCountry", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -104,10 +98,7 @@ namespace DbTask.ExternalDb.Migrations
             modelBuilder.Entity("DbTask.ExternalDb.Models.ExDeletedOffice", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("CityId")
                         .HasColumnType("bigint");
@@ -151,7 +142,7 @@ namespace DbTask.ExternalDb.Migrations
                     b.HasOne("DbTask.ExternalDb.Models.ExCountry", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Country");
@@ -162,7 +153,7 @@ namespace DbTask.ExternalDb.Migrations
                     b.HasOne("DbTask.ExternalDb.Models.ExCity", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("City");

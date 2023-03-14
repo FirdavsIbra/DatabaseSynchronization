@@ -29,11 +29,5 @@ namespace DbTask.InternalDb.DbContexts
         {
             optionsBuilder.UseSqlServer("Server=NBA-088-01-UZ\\SQLEXPRESS;Database=InternalDb;Trusted_Connection=True; TrustServerCertificate=True;");
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<InCity>().HasOne(c => c.Country).WithMany().OnDelete(DeleteBehavior.ClientNoAction);
-            modelBuilder.Entity<InOffice>().HasOne(c => c.City).WithMany().OnDelete(DeleteBehavior.ClientNoAction);
-        }
     }
 }
