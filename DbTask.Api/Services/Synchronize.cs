@@ -147,6 +147,48 @@ namespace DbTask.Api.Services
 
                 if (externalCity == null)
                 {
+                    var exDeletedCity = new ExDeletedCity
+                    {
+                        Id = internalCity.Id,
+                        Name = internalCity.Name,
+                        CountryId = internalCity.CountryId,
+                        DeletedAt = DateTime.Now
+                    };
+                    var inDeletedCity = new InDeletedCity
+                    {
+                        Id = internalCity.Id,
+                        Name = internalCity.Name,
+                        CountryId = internalCity.CountryId,
+                        DeletedAt = DateTime.Now
+                    };
+                    internalDbContext.DeletedCities.Add(inDeletedCity);
+                    externalDbContext.DeletedCities.Add(exDeletedCity);
+
+                    var officesToDelete = await internalDbContext.Offices.Where(o => o.CityId == internalCity.Id).ToListAsync();
+
+                    foreach(var office in officesToDelete)
+                    {
+                        var inDeleteOffice = new InDeletedOffice
+                        {
+                            Id = office.Id,
+                            Name = office.Name,
+                            CityId = office.CityId,
+                            DeletedAt = DateTime.Now
+                        };
+
+                        var exDeletedOffice = new ExDeletedOffice
+                        {
+                            Id = office.Id,
+                            Name = office.Name,
+                            CityId = office.CityId,
+                            DeletedAt = DateTime.Now
+                        };
+
+                        externalDbContext.DeletedOffices.Add(exDeletedOffice);
+                        internalDbContext.DeletedOffices.Add(inDeleteOffice);
+                        internalDbContext.Offices.Remove(office);
+                    }
+
                     internalDbContext.Cities.Remove(internalCity);
                 }
             }
