@@ -20,8 +20,19 @@ namespace DbTask.ExternalDb.DbContexts
         /// </summary>
         public virtual DbSet<ExOffice> Offices { get; set; }
 
+        /// <summary>
+        /// Gets or sets table of deleted countries.
+        /// </summary>
         public virtual DbSet<ExDeletedCountry> DeletedCountries { get; set; }
+
+        /// <summary>
+        /// Gets or sets table of deleted cities.
+        /// </summary>
         public virtual DbSet<ExDeletedCity> DeletedCities { get; set; }
+
+        /// <summary>
+        /// Gets or sets table of deleted offices.
+        /// </summary>
         public virtual DbSet<ExDeletedOffice> DeletedOffices { get; set; }
 
 

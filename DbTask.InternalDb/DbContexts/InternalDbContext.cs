@@ -20,8 +20,19 @@ namespace DbTask.InternalDb.DbContexts
         /// </summary>
         public virtual DbSet<InOffice> Offices { get; set; }
 
+        /// <summary>
+        /// Gets or sets table of deleted countries.
+        /// </summary>
         public virtual DbSet<InDeletedCountry> DeletedCountries { get; set; }
+
+        /// <summary>
+        /// Gets or sets table of deleted cities.
+        /// </summary>
         public virtual DbSet<InDeletedCity> DeletedCities { get; set; }
+
+        /// <summary>
+        /// Gets or sets table of deleted offices.
+        /// </summary>
         public virtual DbSet<InDeletedOffice> DeletedOffices { get; set; }
        
 
