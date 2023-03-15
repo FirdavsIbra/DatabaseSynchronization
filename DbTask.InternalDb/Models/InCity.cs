@@ -20,5 +20,10 @@ namespace DbTask.InternalDb.Models
         /// </summary>
         public long CountryId { get; set; }
         public InCountry Country { get; set; }
+
+        /// <summary>
+        /// Gets or sets offices of the city.
+        /// </summary>
+        public IEnumerable<InOffice> Offices { get; set; } = new List<InOffice>();
     }
 }

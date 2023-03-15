@@ -16,5 +16,6 @@
         /// Synchronize offices from external database to internal database.
         /// </summary>
         public Task SyncOfficesAsync();
+        public Task OptimizedSyncCountriesAsync();
     }
 }

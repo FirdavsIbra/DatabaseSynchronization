@@ -4,6 +4,7 @@ using DbTask.ExternalDb.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DbTask.ExternalDb.Migrations
 {
     [DbContext(typeof(ExternalDbContext))]
-    partial class ExternalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230315055538_optimizedSync")]
+    partial class optimizedSync
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -9,6 +9,126 @@ namespace DbTask.Api.Services
     public class Synchronize : ISynchronize
     {
         /// <summary>
+        /// Optimized verison of synchronizing country.
+        /// </summary>
+        /// <returns></returns>
+        public async Task OptimizedSyncCountriesAsync()
+        {
+            await using var externalDbContext = new ExternalDbContext();
+            await using var internalDbContext = new InternalDbContext();
+
+            var internalCountries = await internalDbContext.Countries
+                .AsNoTracking()
+                .Include(c => c.Cities)
+                    .ThenInclude(ci => ci.Offices)
+                .ToListAsync();
+            var externalCountries = await externalDbContext.Countries
+                .AsNoTracking()
+                .Include(c => c.Cities)
+                    .ThenInclude(ci => ci.Offices)
+                .ToListAsync();
+
+            var internalCountryIds = internalCountries.Select(c => c.Id).ToList();
+            var externalCountryIds = externalCountries.Select(c => c.Id).ToList();
+
+            var countriesToAdd = internalCountries
+                .Where(c => !externalCountryIds.Contains(c.Id))
+                .Select(c => new ExCountry { Id = c.Id, Name = c.Name })
+                .ToList();
+            await externalDbContext.Countries.AddRangeAsync(countriesToAdd);
+
+            var countriesToUpdate = internalCountries
+                 .Where(c => externalCountryIds.Contains(c.Id))
+                 .Select(c => new ExCountry { Id = c.Id, Name = c.Name })
+                 .ToList();
+            foreach (var country in countriesToUpdate)
+            {
+                externalDbContext.Entry(country).CurrentValues.SetValues(country);
+            }
+
+            var countriesToDelete = externalCountries
+                .Where(c => !internalCountryIds.Contains(c.Id))
+                .ToList();
+            foreach (var country in countriesToDelete)
+            {
+                var externalCities = await externalDbContext.Cities
+                    .Where(c => c.CountryId == country.Id)
+                    .ToListAsync();
+                var internalCities = await internalDbContext.Cities
+                    .Where(c => c.CountryId == country.Id)
+                    .ToListAsync();
+
+                var citiesToDelete = externalCities.Where(c => !internalCities.Any(ic => ic.Id == c.Id)).ToList();
+                foreach (var city in citiesToDelete)
+                {
+                    await externalDbContext.Entry(city).Collection(c => c.Offices).LoadAsync();
+
+                    var officesToDelete = city.Offices.ToList();
+                    await Task.WhenAll(officesToDelete.Select(async office =>
+                    {
+                        var inDeletedOffice = new InDeletedOffice
+                        {
+                            Id = office.Id,
+                            Name = office.Name,
+                            CityId = office.CityId,
+                            DeletedAt = DateTime.UtcNow
+                        };
+                        var exDeletedOffice = new ExDeletedOffice
+                        {
+                            Id = office.Id,
+                            Name = office.Name,
+                            CityId = office.CityId,
+                            DeletedAt = DateTime.UtcNow
+                        };
+                        await externalDbContext.DeletedOffices.AddAsync(exDeletedOffice);
+                        await internalDbContext.DeletedOffices.AddAsync(inDeletedOffice);
+
+                        externalDbContext.Offices.Remove(office);
+                    }));
+
+                    var inDeletedCity = new InDeletedCity
+                    {
+                        Id = city.Id,
+                        Name = city.Name,
+                        CountryId = city.CountryId,
+                        DeletedAt = DateTime.UtcNow
+                    };
+                    var exDeletedCity = new ExDeletedCity
+                    {
+                        Id = city.Id,
+                        Name = city.Name,
+                        CountryId = city.CountryId,
+                        DeletedAt = DateTime.UtcNow
+                    };
+                    await externalDbContext.DeletedCities.AddAsync(exDeletedCity);
+                    await internalDbContext.DeletedCities.AddAsync(inDeletedCity);
+
+                    externalDbContext.Cities.Remove(city);
+                }
+
+                var inDeletedCountry = new InDeletedCountry
+                {
+                    Id = country.Id,
+                    Name = country.Name,
+                    DeletedAt = DateTime.UtcNow
+                };
+                var exDeletedCountry = new ExDeletedCountry
+                {
+                    Id = country.Id,
+                    Name = country.Name,
+                    DeletedAt = DateTime.UtcNow
+                };
+                await externalDbContext.DeletedCountries.AddAsync(exDeletedCountry);
+                await internalDbContext.DeletedCountries.AddAsync(inDeletedCountry);
+
+                externalDbContext.Countries.Remove(country);
+            }
+
+            await externalDbContext.SaveChangesAsync();
+            await internalDbContext.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// Synchronize countries from internal database to external database.
         /// </summary>
         public async Task SyncCountriesAsync()
@@ -113,7 +233,7 @@ namespace DbTask.Api.Services
             }
             await externalDbContext.SaveChangesAsync();
             await internalDbContext.SaveChangesAsync();
-        }
+        }       
 
         /// <summary>
         /// Synchronize cities from external database to internal database.

@@ -17,5 +17,10 @@
         /// </summary>
         public long CountryId { get; set; }
         public ExCountry Country { get; set; }
+
+        /// <summary>
+        /// Gets or sets offices of the city.
+        /// </summary>
+        public IEnumerable<ExOffice> Offices { get; set; } = new List<ExOffice>();
     }
 }

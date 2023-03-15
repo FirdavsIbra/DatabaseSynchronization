@@ -14,5 +14,10 @@ namespace DbTask.ExternalDb.Models
         /// Gets or sets name of country.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets cities of country.
+        /// </summary>
+        public IEnumerable<ExCity> Cities { get; set; } = new List<ExCity>();
     }
 }

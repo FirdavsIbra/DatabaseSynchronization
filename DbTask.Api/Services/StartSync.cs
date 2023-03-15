@@ -18,14 +18,15 @@
                 try
                 {
                     Console.WriteLine("Synchronization started");
-                    await _synchronize.SyncCountriesAsync();
+                    await _synchronize.OptimizedSyncCountriesAsync();
                     await _synchronize.SyncCitiesAsync();
                     await _synchronize.SyncOfficesAsync();
                     Console.WriteLine("Synchronization completed");
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     Console.WriteLine("Syncronization failed");
+                    Console.WriteLine(ex.ToString());
                 }
                 await Task.Delay(TimeSpan.FromMinutes(5));
             }
